@@ -1,0 +1,2 @@
+# AsyncUDP_Ethernet
+Fully Asynchronous UDP Library for ESP8266 using W5x00 or ENC28J60 Ethernet. The library is easy to use and includes support for Unicast, Broadcast and Multicast environments. This library is one of the current or future Async libraries to support for ESP8266 using W5x00 or ENC28J60 Ethernet, such as AsyncHTTPRequest_Ethernet, AsyncHTTPSRequest_Ethernet, AsyncWebServer_Ethernet, AsyncDNSServer_Ethernet, AsyncTCP_SSL_Ethernet, etc.
