@@ -38,8 +38,9 @@
   * [1. File AsyncUdpNTPClient.ino](#1-file-asyncudpntpclientino)
   * [2. File defines.h](#2-file-definesh) 
 * [Debug Terminal Output Samples](#debug-terminal-output-samples)
-  * [1. AsyncUdpNTPClient on TEENSY 4.1](#1-AsyncUdpNTPClient-on-TEENSY-41)
-  * [2. AsyncUDPSendReceive on TEENSY 4.1](#2-AsyncUDPSendReceive-on-TEENSY-41)
+  * [1. AsyncUdpNTPClient on ESP8266_NODEMCU_ESP12E with ESP8266_W5500 Ethernet](#1-AsyncUdpNTPClient-on-ESP8266_NODEMCU_ESP12E-with-ESP8266_W5500-Ethernet)
+  * [2. AsyncUDPSendReceive on ESP8266_NODEMCU_ESP12E with ESP8266_W5500 Ethernet](#2-AsyncUDPSendReceive-on-ESP8266_NODEMCU_ESP12E-with-ESP8266_W5500-Ethernet)
+  * [3. AsyncUdpNTPClient on ESP8266_NODEMCU_ESP12E with ESP8266_ENC28J60 Ethernet](#3-AsyncUdpNTPClient-on-ESP8266_NODEMCU_ESP12E-with-ESP8266_ENC28J60-Ethernet)
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Issues](#issues)
@@ -57,7 +58,7 @@
 
 #### Features
 
-This [AsyncUDP_Ethernet library](https://github.com/khoih-prog/AsyncUDP_Ethernet) is a fully asynchronous UDP library, designed for a trouble-free, multi-connection network environment, for **ESP8266 boards using W5x00 or ENC28J60 Ethernet** using [lwIP_w5100](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_w5100), [lwIP_w5500](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_w5500) or [lwIP_enc28j60](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_enc28j60) library.
+This [AsyncUDP_Ethernet library](https://github.com/khoih-prog/AsyncUDP_Ethernet) is a fully asynchronous UDP library, designed for a trouble-free, multi-connection network environment, for **ESP8266 boards using W5x00 or ENC28J60 Ethernet** using [**lwIP_w5100**](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_w5100), [**lwIP_w5500**](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_w5500) or [**lwIP_enc28j60**](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_enc28j60) library.
 
 The library is easy to use and includes support for Unicast, Broadcast and Multicast environments.
 
@@ -222,239 +223,15 @@ void loop()
 
 #### 1. File [AsyncUdpNTPClient.ino](examples/AsyncUdpNTPClient/AsyncUdpNTPClient.ino)
 
+https://github.com/khoih-prog/AsyncUDP_Ethernet/blob/91ea83c3a9a281b4d7cceaa698f9b2696b93483a/examples/AsyncUdpNTPClient/AsyncUdpNTPClient.ino#L12-L194
 
-```cpp
-#include "defines.h"
-#include <time.h>
-
-#include <Ticker.h>                   // https://github.com/sstaub/Ticker
-
-// 0.ca.pool.ntp.org
-IPAddress timeServerIP = IPAddress(208, 81, 1, 244);
-// time.nist.gov
-//IPAddress timeServerIP = IPAddress(132, 163, 96, 1);
-
-#define NTP_REQUEST_PORT      123
-
-//char timeServer[] = "time.nist.gov";  // NTP server
-char timeServer[] = "0.ca.pool.ntp.org";
-
-const int NTP_PACKET_SIZE = 48;       // NTP timestamp is in the first 48 bytes of the message
-
-byte packetBuffer[NTP_PACKET_SIZE];   // buffer to hold incoming and outgoing packets
-
-// A UDP instance to let us send and receive packets over UDP
-AsyncUDP Udp;
-
-// 600s = 10 minutes to not flooding, 60s in testing
-#define UDP_REQUEST_INTERVAL_MS     60000  //600000
-
-void sendNTPPacket();
-
-// Repeat forever, millis() resolution
-Ticker sendUDPRequest(sendNTPPacket, UDP_REQUEST_INTERVAL_MS, 0, MILLIS); 
-
-// send an NTP request to the time server at the given address
-void createNTPpacket(void)
-{
-  Serial.println("============= createNTPpacket =============");
-
-  // set all bytes in the buffer to 0
-  memset(packetBuffer, 0, NTP_PACKET_SIZE);
-  // Initialize values needed to form NTP request
-  // (see URL above for details on the packets)
-
-  packetBuffer[0]   = 0b11100011;   // LI, Version, Mode
-  packetBuffer[1]   = 0;     // Stratum, or type of clock
-  packetBuffer[2]   = 6;     // Polling Interval
-  packetBuffer[3]   = 0xEC;  // Peer Clock Precision
-  
-  // 8 bytes of zero for Root Delay & Root Dispersion
-  packetBuffer[12]  = 49;
-  packetBuffer[13]  = 0x4E;
-  packetBuffer[14]  = 49;
-  packetBuffer[15]  = 52;
-}
-
-void parsePacket(AsyncUDPPacket packet)
-{
-  struct tm  ts;
-  char       buf[80];
-  
-  memcpy(packetBuffer, packet.data(), sizeof(packetBuffer));
-
-  Serial.print("Received UDP Packet Type: ");
-  Serial.println(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast" : "Unicast");
-  Serial.print("From: ");
-  Serial.print(packet.remoteIP());
-  Serial.print(":");
-  Serial.print(packet.remotePort());
-  Serial.print(", To: ");
-  Serial.print(packet.localIP());
-  Serial.print(":");
-  Serial.print(packet.localPort());
-  Serial.print(", Length: ");
-  Serial.print(packet.length());
-  Serial.println();
-
-  unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
-  unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
-
-  // combine the four bytes (two words) into a long integer
-  // this is NTP time (seconds since Jan 1 1900):
-  unsigned long secsSince1900 = highWord << 16 | lowWord;
-  
-  Serial.print(F("Seconds since Jan 1 1900 = "));
-  Serial.println(secsSince1900);
-
-  // now convert NTP time into )everyday time:
-  Serial.print(F("Epoch/Unix time = "));
-  
-  // Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
-  const unsigned long seventyYears = 2208988800UL;
-  
-  // subtract seventy years:
-  unsigned long epoch = secsSince1900 - seventyYears;
-  time_t epoch_t = epoch;   //secsSince1900 - seventyYears;
- 
-  // print Unix time:
-  Serial.println(epoch);
-
-  // print the hour, minute and second:
-  Serial.print(F("The UTC/GMT time is "));       // UTC is the time at Greenwich Meridian (GMT)
-
-  ts = *localtime(&epoch_t);
-  strftime(buf, sizeof(buf), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
-  Serial.println(buf);
-}
-
-void sendNTPPacket()
-{
-  createNTPpacket();
-  //Send unicast
-  Udp.write(packetBuffer, sizeof(packetBuffer));
-}
-
-void setup()
-{
-  Serial.begin(115200);
-  while (!Serial);
-
-  Serial.print("\nStart AsyncUdpNTPClient on "); Serial.println(BOARD_NAME);
-  Serial.println(ASYNC_UDP_TEENSY41_VERSION);
-
-#if defined(ASYNC_UDP_TEENSY41_VERSION_MIN)
-  if (ASYNC_UDP_TEENSY41_VERSION_INT < ASYNC_UDP_TEENSY41_VERSION_MIN)
-  {
-    Serial.print("Warning. Must use this example on Version equal or later than : ");
-    Serial.println(ASYNC_UDP_TEENSY41_VERSION_MIN_TARGET);
-  }
-#endif  
-
-  delay(500);
-
-#if USING_DHCP
-  // Start the Ethernet connection, using DHCP
-  Serial.print("Initialize Ethernet using DHCP => ");
-  Ethernet.begin();
-#else
-  // Start the Ethernet connection, using static IP
-  Serial.print("Initialize Ethernet using static IP => ");
-  Ethernet.begin(myIP, myNetmask, myGW);
-  Ethernet.setDNSServerIP(mydnsServer);
-#endif
-
-  if (!Ethernet.waitForLocalIP(5000))
-  {
-    Serial.println(F("Failed to configure Ethernet"));
-
-    if (!Ethernet.linkStatus())
-    {
-      Serial.println(F("Ethernet cable is not connected."));
-    }
-
-    // Stay here forever
-    while (true)
-    {
-      delay(1);
-    }
-  }
-  else
-  {
-    Serial.print(F("Connected! IP address:")); Serial.println(Ethernet.localIP());
-  }
-
-#if USING_DHCP
-  delay(1000);
-#else  
-  delay(2000);
-#endif
-
-
-  //NTP requests are to port NTP_REQUEST_PORT = 123
-  if (Udp.connect(timeServerIP, NTP_REQUEST_PORT))
-  //if (Udp.connect(timeServer, NTP_REQUEST_PORT))
-  {
-    Serial.println("UDP connected");
-
-    Udp.onPacket([](AsyncUDPPacket packet)
-    {
-      parsePacket(packet);
-    });
-  }
-
-  sendNTPPacket();
-
-  sendUDPRequest.start(); //start the ticker
-}
-
-void loop()
-{
-  sendUDPRequest.update();
-}
-```
 
 #### 2. File [defines.h](examples/AsyncUdpNTPClient/defines.h)
 
-```cpp
-#ifndef defines_h
-#define defines_h
+https://github.com/khoih-prog/AsyncUDP_Ethernet/blob/91ea83c3a9a281b4d7cceaa698f9b2696b93483a/examples/AsyncUdpNTPClient/defines.h#L12-L74
 
-#if !( defined(CORE_TEENSY) && defined(__IMXRT1062__) && defined(ARDUINO_TEENSY41) )
-  //#error Only Teensy 4.1 supported
-#endif
 
-#define ASYNC_UDP_ETHERNET_DEBUG_PORT       Serial
-
-// Debug Level from 0 to 4
-#define _ASYNC_UDP_ETHERNET_LOGLEVEL_       4
-
-#define SHIELD_TYPE     "Teensy4.1 QNEthernet"
-
-#if (_ASYNC_UDP_ETHERNET_LOGLEVEL_ > 3)
-  #warning Using QNEthernet lib for Teensy 4.1. Must also use Teensy Packages Patch or error
-#endif
-
-#define USING_DHCP            true
-//#define USING_DHCP            false
-
-#if !USING_DHCP
-  // Set the static IP address to use if the DHCP fails to assign
-  IPAddress myIP(192, 168, 2, 222);
-  IPAddress myNetmask(255, 255, 255, 0);
-  IPAddress myGW(192, 168, 2, 1);
-  //IPAddress mydnsServer(192, 168, 2, 1);
-  IPAddress mydnsServer(8, 8, 8, 8);
-#endif
-
-#include "QNEthernet.h"       // https://github.com/ssilverman/QNEthernet
-using namespace qindesign::network;
-
-#include <AsyncUDP_Ethernet.h>        // https://github.com/khoih-prog/AsyncUDP_Ethernet
-
-#endif    //defines_h
-```
-
+---
 ---
 
 ### Debug Terminal Output Samples
@@ -584,7 +361,7 @@ Submit issues to: [AsyncUDP_Ethernet issues](https://github.com/khoih-prog/Async
 
 ## DONE
 
- 1. Initial porting and coding for **ESP8266 using W5x00 or ENC28J60 Ethernet** using [lwIP_w5100](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_w5100), [lwIP_w5500](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_w5500) or [lwIP_enc28j60](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_enc28j60) library.
+ 1. Initial porting and coding for **ESP8266 using W5x00 or ENC28J60 Ethernet** using [**lwIP_w5100**](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_w5100), [**lwIP_w5500**](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_w5500) or [**lwIP_enc28j60**](https://github.com/esp8266/Arduino/tree/master/libraries/lwIP_enc28j60) library.
  2. Add more examples.
  3. Add debugging features.
 
