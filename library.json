@@ -1,0 +1,36 @@
+{
+  "name":"AsyncUDP_Ethernet",
+  "version": "1.2.1",
+  "description":"Fully Asynchronous UDP Library for ESP8266 using W5x00 or ENC28J60 Ethernet. The library is easy to use and includes support for Unicast, Broadcast and Multicast environments. This library is one of the current or future Async libraries to support for ESP8266 using W5x00 or ENC28J60 Ethernet, such as AsyncHTTPRequest_Ethernet, AsyncHTTPSRequest_Ethernet, AsyncWebServer_Ethernet, AsyncDNSServer_Ethernet, AsyncTCP_SSL_Ethernet, etc.",
+  "keywords":"communication, data, async, udp, async-udp, ntp, time, time-server, server, client, multicast, broadcast, webserver, esp8266, w5100, w5500, enc28j60, lwip",
+  "authors": [
+    {
+      "name": "Hristo Gochkov",
+      "url":   "https://github.com/me-no-dev"
+    },
+    {
+      "name":  "Khoi Hoang",
+      "url":   "https://github.com/khoih-prog",
+      "email": "khoih-dot-prog@gmail.com",
+      "maintainer": true
+    }  
+  ],
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/khoih-prog/AsyncUDP_Ethernet.git"
+  },
+  "homepage": "https://github.com/khoih-prog/AsyncUDP_Ethernet",
+  "export": {
+    "exclude": [
+      "linux",
+      "extras",
+      "tests"
+    ]
+  },
+  "license": "GPL-3.0",
+  "frameworks": "*",
+  "platforms": ["espressif8266"],
+  "examples": "examples/*/*/*.ino",
+  "headers": ["AsyncUDP_Ethernet.h", "AsyncUDP_Ethernet.hpp"]
+}
