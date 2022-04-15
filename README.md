@@ -66,7 +66,7 @@ This library is based on, modified from:
 
 1. [Hristo Gochkov's ESPAsyncUDP](https://github.com/me-no-dev/ESPAsyncUDP)
 
-to apply the better and faster **asynchronous** feature of the **powerful** [ESPAsyncUDP Library](https://github.com/me-no-dev/ESPAsyncUDP) into Teensy 4.1 using QNEthernet Library.
+to apply the better and faster **asynchronous** feature of the **powerful** [ESPAsyncUDP Library](https://github.com/me-no-dev/ESPAsyncUDP) into **ESP8266 boards using W5x00 or ENC28J60 Ethernet**
 
 
 #### Why Async is better
@@ -81,7 +81,7 @@ to apply the better and faster **asynchronous** feature of the **powerful** [ESP
 
 ### Currently Supported Boards
 
-1. **Teensy 4.1 using QNEthernet Library**
+1. **ESP8266 boards using W5x00 or ENC28J60 Ethernet**
 
 ---
 ---
