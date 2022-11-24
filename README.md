@@ -1,4 +1,4 @@
-# AsyncUDP_Ethernet
+# AsyncUDP_Ethernet Library
 
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/AsyncUDP_Ethernet.svg?)](https://www.ardu-badge.com/AsyncUDP_Ethernet)
@@ -6,8 +6,11 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/AsyncUDP_Ethernet.svg)](http://github.com/khoih-prog/AsyncUDP_Ethernet/issues)
 
+
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
+<a href="https://profile-counter.glitch.me/khoih-prog/count.svg" title="Total khoih-prog Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog/count.svg" style="height: 30px;width: 200px;"></a>
+<a href="https://profile-counter.glitch.me/khoih-prog-AsyncUDP_Ethernet/count.svg" title="AsyncUDP_Ethernet Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog-AsyncUDP_Ethernet/count.svg" style="height: 30px;width: 200px;"></a>
 
 ---
 ---
@@ -104,9 +107,9 @@ The best way is to use `Arduino Library Manager`. Search for `AsyncUDP_Ethernet`
 ### Manual Install
 
 1. Navigate to [AsyncUDP_Ethernet](https://github.com/khoih-prog/AsyncUDP_Ethernet) page.
-2. Download the latest release `AsyncUDP_Ethernet-master.zip`.
-3. Extract the zip file to `AsyncUDP_Ethernet-master` directory 
-4. Copy the whole `AsyncUDP_Ethernet-master` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
+2. Download the latest release `AsyncUDP_Ethernet-main.zip`.
+3. Extract the zip file to `AsyncUDP_Ethernet-main` directory 
+4. Copy the whole `AsyncUDP_Ethernet-main` folder to Arduino libraries' directory such as `~/Arduino/libraries/`.
 
 ### VS Code & PlatformIO:
 
@@ -125,14 +128,14 @@ The current library implementation, using `xyz-Impl.h` instead of standard `xyz.
 
 You can include this `.hpp` file
 
-```
+```cpp
 // Can be included as many times as necessary, without `Multiple Definitions` Linker Error
 #include "AsyncUDP_Ethernet.hpp"         //https://github.com/khoih-prog/AsyncUDP_Ethernet
 ```
 
 in many files. But be sure to use the following `.h` file **in just 1 `.h`, `.cpp` or `.ino` file**, which must **not be included in any other file**, to avoid `Multiple Definitions` Linker Error
 
-```
+```cpp
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "AsyncUDP_Ethernet.h"           //https://github.com/khoih-prog/AsyncUDP_Ethernet
 ```
@@ -223,12 +226,12 @@ void loop()
 
 #### 1. File [AsyncUdpNTPClient.ino](examples/AsyncUdpNTPClient/AsyncUdpNTPClient.ino)
 
-https://github.com/khoih-prog/AsyncUDP_Ethernet/blob/91ea83c3a9a281b4d7cceaa698f9b2696b93483a/examples/AsyncUdpNTPClient/AsyncUdpNTPClient.ino#L12-L194
+https://github.com/khoih-prog/AsyncUDP_Ethernet/blob/8db69d351bfd022dd496626c7c6aec770d25ef74/examples/AsyncUdpNTPClient/AsyncUdpNTPClient.ino#L12-L202
 
 
 #### 2. File [defines.h](examples/AsyncUdpNTPClient/defines.h)
 
-https://github.com/khoih-prog/AsyncUDP_Ethernet/blob/91ea83c3a9a281b4d7cceaa698f9b2696b93483a/examples/AsyncUdpNTPClient/defines.h#L12-L74
+https://github.com/khoih-prog/AsyncUDP_Ethernet/blob/8db69d351bfd022dd496626c7c6aec770d25ef74/examples/AsyncUdpNTPClient/defines.h#L12-L74
 
 
 ---
@@ -241,7 +244,7 @@ https://github.com/khoih-prog/AsyncUDP_Ethernet/blob/91ea83c3a9a281b4d7cceaa698f
 This is terminal debug output when running [AsyncUdpNTPClient](examples/AsyncUdpNTPClient) on **ESP8266_NODEMCU_ESP12E with ESP8266_W5500 Ethernet**. It connects to NTP Server "0.ca.pool.ntp.org" (IPAddress(208, 81, 1, 244)) using AsyncUDP_Ethernet library, and requests NTP time every 60s. The packet is then **received and processed asynchronously** to print current UTC/GMT time.
 
 
-```
+```cpp
 Start AsyncUdpNTPClient on ESP8266_NODEMCU_ESP12E with ESP8266_W5500 Ethernet
 AsyncUDP_Ethernet v1.2.1
 Connecting to network : ..
@@ -267,7 +270,7 @@ The UTC/GMT time is Fri 2022-04-15 05:44:49 GMT
 
 This is terminal debug output when running [AsyncUDPSendReceive](examples/AsyncUDPSendReceive) on **ESP8266_NODEMCU_ESP12E with ESP8266_W5500 Ethernet**. It connects to NTP Server "time.nist.gov" (IPAddress(208, 81, 1, 244)) using AsyncUDP_Ethernet library, and requests NTP time every 60s. The packet is then **received and processed asynchronously** to print current UTC/GMT time.
 
-```
+```cpp
 Start AsyncUDPSendReceive on ESP8266_NODEMCU_ESP12E with ESP8266_W5500 Ethernet
 AsyncUDP_Ethernet v1.2.1
 Connecting to network : .
@@ -291,7 +294,7 @@ The UTC/GMT time is Fri 2022-04-15 14:37:49 GMT
 This is terminal debug output when running [AsyncUdpNTPClient](examples/AsyncUdpNTPClient) on **ESP8266_NODEMCU_ESP12E with ESP8266_ENC28J60 Ethernet**. It connects to NTP Server "0.ca.pool.ntp.org" (IPAddress(208, 81, 1, 244)) using AsyncUDP_Ethernet library, and requests NTP time every 60s. The packet is then **received and processed asynchronously** to print current UTC/GMT time.
 
 
-```
+```cpp
 Start AsyncUdpNTPClient on ESP8266_NODEMCU_ESP12E with ESP8266_W5500 Ethernet
 AsyncUDP_Ethernet v1.2.1
 Connecting to network : ..
@@ -400,7 +403,7 @@ If you want to contribute to this project:
 
 ## Copyright
 
-- Copyright 2016- Hristo Gochkov
-- Copyright 2022- Khoi Hoang
+- Copyright (c) 2016- Hristo Gochkov
+- Copyright (c) 2022- Khoi Hoang
 
 
