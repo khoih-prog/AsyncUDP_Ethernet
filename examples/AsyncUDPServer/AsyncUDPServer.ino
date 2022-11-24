@@ -81,12 +81,15 @@ void initEthernet()
 void setup()
 {
   Serial.begin(115200);
+
   while (!Serial && millis() < 5000);
 
   delay(200);
 
-  Serial.print("\nStart AsyncUDPServer on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart AsyncUDPServer on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(ASYNC_UDP_ETHERNET_VERSION);
 
   initEthernet();

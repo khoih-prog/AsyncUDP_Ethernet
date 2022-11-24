@@ -2,13 +2,13 @@
   AsyncUDPMulticastServer.ino
 
   For ESP8266 with lwIP_5100, lwIP_5500 or lwIP_enc28j60 library
-  
+
   AsyncUDP_Ethernet is a Async UDP library for the ESP8266 with lwIP_5100, lwIP_5500 or lwIP_enc28j60 library
-  
+
   Based on and modified from ESPAsyncUDP Library (https://github.com/me-no-dev/ESPAsyncUDP)
   Built by Khoi Hoang https://github.com/khoih-prog/ASYNC_UDP_Ethernet
  *****************************************************************************************************************************/
- 
+
 #include "defines.h"
 
 #define ASYNC_UDP_ETHERNET_VERSION_MIN_TARGET      "AsyncUDP_Ethernet v1.2.1"
@@ -24,13 +24,13 @@ AsyncUDP udp;
 void sendRequest();
 
 // Repeat forever, millis() resolution
-//Ticker sendUDPRequest(sendRequest, UDP_REQUEST_INTERVAL_MS, 0, MILLIS); 
+//Ticker sendUDPRequest(sendRequest, UDP_REQUEST_INTERVAL_MS, 0, MILLIS);
 Ticker sendUDPRequest;
 
 void sendRequest()
 {
   UDP_LOGDEBUG("Send multicast");
-  
+
   //Send multicast
   udp.print("Anyone here?");
 }
@@ -66,49 +66,52 @@ void initEthernet()
 #if !USING_DHCP
   eth.config(localIP, gateway, netMask, gateway);
 #endif
-  
+
   eth.setDefault();
-  
-  if (!eth.begin()) 
+
+  if (!eth.begin())
   {
     Serial.println("No Ethernet hardware ... Stop here");
-    
-    while (true) 
+
+    while (true)
     {
       delay(1000);
     }
-  } 
-  else 
+  }
+  else
   {
     Serial.print("Connecting to network : ");
-    
-    while (!eth.connected()) 
+
+    while (!eth.connected())
     {
       Serial.print(".");
       delay(1000);
     }
   }
- 
+
   Serial.println();
 
-#if USING_DHCP  
+#if USING_DHCP
   Serial.print("Ethernet DHCP IP address: ");
 #else
   Serial.print("Ethernet Static IP address: ");
 #endif
-  
+
   Serial.println(eth.localIP());
 }
 
 void setup()
 {
   Serial.begin(115200);
+
   while (!Serial && millis() < 5000);
 
   delay(200);
 
-  Serial.print("\nStart AsyncUDPMulticastServer on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart AsyncUDPMulticastServer on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(ASYNC_UDP_ETHERNET_VERSION);
 
   initEthernet();

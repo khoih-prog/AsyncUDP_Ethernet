@@ -30,10 +30,10 @@ Arduino IDE version: 1.8.19
 ESP8266_NODEMCU_ESP12E using ESP8266_W5500 Ethernet
 ESP8266 core v3.0.2
 OS: Ubuntu 20.04 LTS
-Linux xy-Inspiron-3593 5.13.0-39-generic #44~20.04.1-Ubuntu SMP Thu Mar 24 16:43:35 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+Linux xy-Inspiron-3593 5.15.0-53-generic #59~20.04.1-Ubuntu SMP Thu Oct 20 15:10:22 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
 
 Context:
-I encountered an endless loop while trying to connect to Local WiFi.
+I encountered a crash while using this library
 
 Steps to reproduce:
 1. ...
@@ -41,13 +41,34 @@ Steps to reproduce:
 3. ...
 4. ...
 ```
+
+---
+
 ### Sending Feature Requests
 
 Feel free to post feature requests. It's helpful if you can explain exactly why the feature would be useful.
 
-There are usually some outstanding feature requests in the [existing issues list](https://github.com/khoih-prog/AsyncUDP_Ethernet/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement), feel free to add comments to them.
+There are usually some outstanding feature requests in the [existing issues list](https://github.com/khoih-prog/RP2040_PWM/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement), feel free to add comments to them.
+
+---
 
 ### Sending Pull Requests
 
 Pull Requests with changes and fixes are also welcome!
+
+Please use the `astyle` to reformat the updated library code as follows (demo for Ubuntu Linux)
+
+1. Change directory to the library GitHub
+
+```
+xy@xy-Inspiron-3593:~$ cd Arduino/xy/RP2040_PWM_GitHub/
+xy@xy-Inspiron-3593:~/Arduino/xy/RP2040_PWM_GitHub$
+```
+
+2. Issue astyle command
+
+```
+xy@xy-Inspiron-3593:~/Arduino/xy/RP2040_PWM_GitHub$ bash utils/restyle.sh
+```
+
 

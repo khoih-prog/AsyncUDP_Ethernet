@@ -2,9 +2,9 @@
   Async_UdpClient.ino
 
   For ESP8266 with lwIP_5100, lwIP_5500 or lwIP_enc28j60 library
-  
+
   AsyncUDP_Ethernet is a Async UDP library for the ESP8266 with lwIP_5100, lwIP_5500 or lwIP_enc28j60 library
-  
+
   Based on and modified from ESPAsyncUDP Library (https://github.com/me-no-dev/ESPAsyncUDP)
   Built by Khoi Hoang https://github.com/khoih-prog/ASYNC_UDP_Ethernet
  *****************************************************************************************************************************/
@@ -28,13 +28,13 @@ AsyncUDP udp;
 void sendRequest();
 
 // Repeat forever, millis() resolution
-//Ticker sendUDPRequest(sendRequest, UDP_REQUEST_INTERVAL_MS, 0, MILLIS); 
+//Ticker sendUDPRequest(sendRequest, UDP_REQUEST_INTERVAL_MS, 0, MILLIS);
 Ticker sendUDPRequest;
 
 void sendRequest()
 {
   UDP_LOGDEBUG1("Send broadcastTo port ", UDP_REMOTE_PORT);
-  
+
   udp.broadcastTo("Anyone here?", UDP_REMOTE_PORT);
 }
 
@@ -69,52 +69,56 @@ void initEthernet()
 #if !USING_DHCP
   eth.config(localIP, gateway, netMask, gateway);
 #endif
-  
+
   eth.setDefault();
-  
-  if (!eth.begin()) 
+
+  if (!eth.begin())
   {
     Serial.println("No Ethernet hardware ... Stop here");
-    
-    while (true) 
+
+    while (true)
     {
       delay(1000);
     }
-  } 
-  else 
+  }
+  else
   {
     Serial.print("Connecting to network : ");
-    
-    while (!eth.connected()) 
+
+    while (!eth.connected())
     {
       Serial.print(".");
       delay(1000);
     }
   }
- 
+
   Serial.println();
 
-#if USING_DHCP  
+#if USING_DHCP
   Serial.print("Ethernet DHCP IP address: ");
 #else
   Serial.print("Ethernet Static IP address: ");
 #endif
-  
+
   Serial.println(eth.localIP());
 }
 
 void setup()
 {
   Serial.begin(115200);
+
   while (!Serial && millis() < 5000);
 
   delay(200);
 
-  Serial.print("\nStart Async_UDPClient on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart Async_UDPClient on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(ASYNC_UDP_ETHERNET_VERSION);
 
   initEthernet();
+
   if (udp.connect(remoteIPAddress, UDP_REMOTE_PORT))
   {
     Serial.println("UDP connected");

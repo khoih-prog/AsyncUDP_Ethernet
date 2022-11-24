@@ -70,11 +70,16 @@ void parsePacket(AsyncUDPPacket packet)
 
   Serial.print("Received UDP Packet Type: ");
   Serial.println(packet.isBroadcast() ? "Broadcast" : packet.isMulticast() ? "Multicast" : "Unicast");
-  Serial.print("From: "); Serial.print(packet.remoteIP());
-  Serial.print(":"); Serial.print(packet.remotePort());
-  Serial.print(", To: "); Serial.print(packet.localIP());
-  Serial.print(":"); Serial.print(packet.localPort());
-  Serial.print(", Length: "); Serial.print(packet.length());
+  Serial.print("From: ");
+  Serial.print(packet.remoteIP());
+  Serial.print(":");
+  Serial.print(packet.remotePort());
+  Serial.print(", To: ");
+  Serial.print(packet.localIP());
+  Serial.print(":");
+  Serial.print(packet.localPort());
+  Serial.print(", Length: ");
+  Serial.print(packet.length());
   Serial.println();
 
   unsigned long highWord  = word(packetBuffer[40], packetBuffer[41]);
@@ -162,19 +167,22 @@ void initEthernet()
 void setup()
 {
   Serial.begin(115200);
+
   while (!Serial && millis() < 5000);
 
   delay(200);
 
-  Serial.print("\nStart AsyncUdpNTPClient on "); Serial.print(BOARD_NAME);
-  Serial.print(" with "); Serial.println(SHIELD_TYPE);
+  Serial.print("\nStart AsyncUdpNTPClient on ");
+  Serial.print(BOARD_NAME);
+  Serial.print(" with ");
+  Serial.println(SHIELD_TYPE);
   Serial.println(ASYNC_UDP_ETHERNET_VERSION);
 
   initEthernet();
 
   //NTP requests are to port NTP_REQUEST_PORT = 123
   if (Udp.connect(timeServerIP, NTP_REQUEST_PORT))
-  //if (Udp.connect(timeServer, NTP_REQUEST_PORT))
+    //if (Udp.connect(timeServer, NTP_REQUEST_PORT))
   {
     Serial.println("UDP connected");
 

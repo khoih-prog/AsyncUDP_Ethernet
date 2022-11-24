@@ -1,10 +1,10 @@
 /****************************************************************************************************************************
   defines.h
-  
+
   For ESP8266 with lwIP_5100, lwIP_5500 or lwIP_enc28j60 library
-  
+
   AsyncUDP_Ethernet is a Async UDP library for the ESP8266 with lwIP_5100, lwIP_5500 or lwIP_enc28j60 library
-  
+
   Based on and modified from ESPAsyncUDP Library (https://github.com/me-no-dev/ESPAsyncUDP)
   Built by Khoi Hoang https://github.com/khoih-prog/ASYNC_UDP_Ethernet
  *****************************************************************************************************************************/
@@ -17,7 +17,7 @@
   #define LED_OFF     HIGH
 #else
   #error Only ESP8266
-#endif  
+#endif
 
 #define _AWS_ETHERNET_LOGLEVEL_               1
 
@@ -34,19 +34,19 @@
 #if USING_W5500
   #include "W5500lwIP.h"
   #define SHIELD_TYPE       "ESP8266_W5500 Ethernet"
-  
-  Wiznet5500lwIP eth(CSPIN); 
-   
+
+  Wiznet5500lwIP eth(CSPIN);
+
 #elif USING_W5100
   #include <W5100lwIP.h>
   #define SHIELD_TYPE       "ESP8266_W5100 Ethernet"
-  
+
   Wiznet5100lwIP eth(CSPIN);
 
 #elif USING_ENC28J60
   #include <ENC28J60lwIP.h>
   #define SHIELD_TYPE       "ESP8266_ENC28J60 Ethernet"
-  
+
   ENC28J60lwIP eth(CSPIN);
 #else
   // default if none selected
